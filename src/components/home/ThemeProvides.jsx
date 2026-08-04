@@ -1,9 +1,10 @@
 // app/providers.tsx
 "use client";
 
-import {ThemeProvider as NextThemesProvider} from "next-themes";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
-export function Providers({children}) {
+// HeroUI v3 (@heroui/styles) needs no provider — just next-themes for the class toggle
+export function Providers({ children }) {
   return (
     <NextThemesProvider
       attribute="class"
