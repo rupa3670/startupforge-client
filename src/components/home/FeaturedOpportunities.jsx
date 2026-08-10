@@ -1,15 +1,10 @@
 'use client'
 import React, { useEffect, useState } from 'react';
 import OpportunityCards from './OpportunityCards';
-import { Spinner } from '@heroui/react';
+import { Loading } from '../Loading';
 
-const FeaturedLoading = () => {
-    return (
-        <div className="flex items-center justify-center py-20">
-            <Spinner size="lg" color="primary" />
-        </div>
-    );
-};
+
+
 
 const FeaturedOpportunities = () => {
     const [opportunity, setOpportunity] = useState([]);
@@ -33,7 +28,7 @@ const FeaturedOpportunities = () => {
     </span>
 </div>
             {loading ? (
-                <FeaturedLoading />
+                <Loading />
             ) : (
                 <div className='grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch'>
                     {opportunity.map(opportunities => (

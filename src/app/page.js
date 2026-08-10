@@ -9,7 +9,7 @@ import FeaturedOpportunities from '@/components/home/FeaturedOpportunities';
 
 const HomePage = () => {
   return (
-    <div className='min-h-screen'>
+    <div >
       <Banner/>
       <FeaturedStartups/>
       <FeaturedOpportunities/>

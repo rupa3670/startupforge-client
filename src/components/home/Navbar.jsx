@@ -10,8 +10,8 @@ import ThemeSwitch from "./ThemeSwitch";
 
 const publicLinks = [
   { label: "Home", href: "/" },
-  { label: "Browse startups", href: "/startups" },
-  { label: "Browse opportunities", href: "/opportunities" },
+  { label: "Browse startups", href: "/browse-startups" },
+  { label: "Browse opportunities", href: "/browse-opportunities" },
 ];
 
 export default function Navbar() {
