@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "@heroui/react";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const router = useRouter();

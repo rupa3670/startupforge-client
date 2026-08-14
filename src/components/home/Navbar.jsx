@@ -15,11 +15,12 @@ const publicLinks = [
 ];
 
 export default function Navbar() {
-  const pathname = usePathname();
+  
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  
 
   const { data: session, isPending } = authClient.useSession();
 
@@ -33,6 +34,10 @@ export default function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+  const pathname = usePathname();
+  if(pathname.includes("dashboard")){
+    return null
+  }
 
   const handleLogout = async () => {
     await authClient.signOut();

@@ -1,6 +1,8 @@
+'use client'
 import Link from "next/link";
 import Image from "next/image";
 import { LogoFacebook, LogoLinkedin, LogoGithub } from "@gravity-ui/icons";
+import { usePathname } from "next/navigation";
 
 const quickLinks = [
   { label: "Home", href: "/" },
@@ -18,6 +20,10 @@ const socialLinks = [
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const pathname = usePathname();
+    if(pathname.includes("dashboard")){
+      return null
+    }
 
   return (
     <footer className="bg-[#0B0E14] text-gray-300">

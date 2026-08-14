@@ -54,7 +54,7 @@ const Register = () => {
     );
 
     const data = await res.json();
-    return data?.data?.url || null;
+    return data?.data?.url ||"/assest/avatar.png" ;
   };
 
   const handleSubmit = async (e) => {
@@ -78,6 +78,7 @@ const Register = () => {
         name: formData.name,
         image: imageUrl || "",
         role: formData.role,
+        plan:"free",
       });
 
       if (signUpError) {
@@ -106,7 +107,7 @@ const Register = () => {
       provider: "google",
       callbackURL: "/",
     });
-    toast.success("SignUp successful!");
+    // toast.success("SignUp successful!");
   };
 
   return (
@@ -243,7 +244,7 @@ const Register = () => {
           <Button
             onClick={handleGoogleSignUp}
             variant="bordered"
-            className="w-full border border-sky-50 shadow-sm hover:bg-sky-50"
+            className="w-full border border-sky-50 shadow-sm hover:bg-sky-50 dark:hover:bg-transparent"
             size="lg"
           >
             <FcGoogle />  Continue with Google
