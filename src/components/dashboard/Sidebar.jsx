@@ -2,17 +2,41 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
+import { authClient } from '@/lib/auth-client'; // তোমার auth client এর path
 
 const Sidebar = () => {
     const pathname = usePathname();
+    const { data: session, isPending } = authClient.useSession();
+    const role = session?.user?.role;
 
     const navLinks = [
-        { href: "/dashboard", label: "Overview" },
-        { href: "/dashboard/my-startup", label: "My Startup" },
-        { href: "/dashboard/opportunities", label: "Manage Opportunities" },
-        { href: "/dashboard/applications", label: "Applications" },
-        { href: "/dashboard/profile", label: "Profile" },
+        { href: "/dashboard/founder", label: "Overview", roles: ["founder"] },
+        { href: "/dashboard/profile", label: "Profile", roles: ["founder", "collaborator"] },
+        { href: "/dashboard/founder/my-startup", label: "My Startup", roles: ["founder"] },
+        { href: "/dashboard/founder/add-opportunities", label:"Add Opportunity", roles: ["founder"] },
+        { href: "/dashboard/founder/manage-opportunities", label: "Manage Opportunities", roles: ["founder"] },
+        { href: "/dashboard/founder/applications", label: "Applications", roles: ["founder"] },
+        { href: "/dashboard/browse-opportunities", label: "Browse Opportunities", roles: ["collaborator"] },
+        { href: "/dashboard/my-applications", label: "My Applications", roles: ["collaborator"] },
+        { href: "/dashboard/manage-users", label: "Manage Users", roles: ["admin"] },
+        { href: "/dashboard/manage-startups", label: "Manage Startups", roles: ["admin"] },
+        { href: "/dashboard/transactions", label: "Transactions", roles: ["admin"] },
     ];
+
+    
+    if (isPending) {
+        return (
+            <aside className="hidden md:flex flex-col w-[240px] h-screen sticky top-0 bg-white dark:bg-black border-r border-indigo-300/40 dark:border-indigo-500/20">
+                <div className="animate-pulse p-6 space-y-3">
+                    <div className="h-6 bg-indigo-200 dark:bg-indigo-900 rounded w-2/3" />
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded" />
+                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded" />
+                </div>
+            </aside>
+        );
+    }
+
+    const filteredLinks = navLinks.filter((item) => item.roles.includes(role));
 
     return (
         <aside className="hidden md:flex flex-col w-[240px] h-screen sticky top-0 bg-gradient-to-b from-indigo-100 via-white to-white dark:from-indigo-950 dark:via-black dark:to-black border-r border-indigo-300/40 dark:border-indigo-500/20 transition-colors">
@@ -25,7 +49,7 @@ const Sidebar = () => {
             </div>
 
             <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
-                {navLinks.map((item) => {
+                {filteredLinks.map((item) => {
                     const isActive =
                         item.href === "/dashboard"
                             ? pathname === "/dashboard"
