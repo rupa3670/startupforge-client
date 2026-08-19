@@ -1,44 +1,57 @@
 'use client'
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
 
 const AddOpportunityPage = () => {
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
+
   const [roleTitle, setRoleTitle] = useState('');
   const [requiredSkills, setRequiredSkills] = useState('');
   const [workType, setWorkType] = useState('Remote');
   const [commitmentLevel, setCommitmentLevel] = useState('Full-time');
   const [deadline, setDeadline] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [errorMsg,setErrorMsg] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     setSubmitting(true);
 
-    const skillsArray = requiredSkills.split(',')
-    .map((skill)=> skill.trim())
-    .filter((skill)=>skill.length>0);
+    try {
+      const skillsArray = requiredSkills
+        .split(',')
+        .map((skill) => skill.trim())
+        .filter((skill) => skill.length > 0);
 
-    const opportunityData={
+      const opportunityData = {
         founderEmail: session?.user?.email,
-        role_title:roleTitle,
-        required_skills:skillsArray,
-        work_type:workType,
-        commitment_level:commitmentLevel,deadline,
-    };
+        role_title: roleTitle,
+        required_skills: skillsArray,
+        work_type: workType,
+        commitment_level: commitmentLevel,
+        deadline,
+      };
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/opportunities`,{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(opportunityData),
-    });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/opportunities`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(opportunityData),
+      });
 
-    const data = await res.json();
-    setSubmitting(false);
-    if(data.success){
+      const data = await res.json();
+
+      if (data.success) {
         router.push('/dashboard/founder/manage-opportunities');
-    } else {
-      setErrorMsg(data.message || 'Something went wrong. Please try again.');
+      } else {
+        setErrorMsg(data.message || 'Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      setErrorMsg('Could not reach the server. Please try again.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -140,12 +153,16 @@ const AddOpportunityPage = () => {
             />
           </div>
 
+          {errorMsg && (
+            <p className="text-sm text-red-500 dark:text-red-400 -mt-2">{errorMsg}</p>
+          )}
+
           <button
             type="submit"
-            disabled={submitting}
-            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-3.5 rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200"
+            disabled={submitting || isPending}
+            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-3.5 rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-[1.01] active:scale-[0.99] transition-all duration-200 disabled:opacity-60 disabled:hover:scale-100"
           >
-          {submitting?'Posting...':'Post Opportunity'}
+            {submitting ? 'Posting...' : 'Post Opportunity'}
           </button>
         </form>
       </div>
