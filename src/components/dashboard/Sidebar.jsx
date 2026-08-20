@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
-import { authClient } from '@/lib/auth-client'; // তোমার auth client এর path
+import { authClient } from '@/lib/auth-client';
 
 const Sidebar = () => {
     const pathname = usePathname();
@@ -14,7 +14,7 @@ const Sidebar = () => {
         { href: "/dashboard/collaborator", label: "Overview", roles: ["collaborator"] },
         { href: "/dashboard/profile", label: "Profile", roles: ["founder", "collaborator"] },
         { href: "/dashboard/founder/my-startup", label: "My Startup", roles: ["founder"] },
-        { href: "/dashboard/founder/add-opportunities", label:"Add Opportunity", roles: ["founder"] },
+        { href: "/dashboard/founder/add-opportunities", label: "Add Opportunity", roles: ["founder"] },
         { href: "/dashboard/founder/manage-opportunities", label: "Manage Opportunities", roles: ["founder"] },
         { href: "/dashboard/founder/applications", label: "Applications", roles: ["founder"] },
         { href: "/dashboard/collaborator/my-applications", label: "My Applications", roles: ["collaborator"] },
@@ -23,7 +23,7 @@ const Sidebar = () => {
         { href: "/dashboard/transactions", label: "Transactions", roles: ["admin"] },
     ];
 
-    
+
     if (isPending) {
         return (
             <aside className="hidden md:flex flex-col w-[240px] h-screen sticky top-0 bg-white dark:bg-black border-r border-indigo-300/40 dark:border-indigo-500/20">
@@ -51,19 +51,18 @@ const Sidebar = () => {
             <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
                 {filteredLinks.map((item) => {
                     const isActive =
-                        item.href === "/dashboard"
-                            ? pathname === "/dashboard"
+                        item.href === "/dashboard/founder" || item.href === "/dashboard/collaborator"
+                            ? pathname === item.href
                             : pathname.startsWith(item.href);
 
                     return (
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
-                                isActive
+                            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${isActive
                                     ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25"
                                     : "text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gradient-to-r hover:from-indigo-600/20 hover:to-purple-600/20"
-                            }`}
+                                }`}
                         >
                             {item.label}
                         </Link>
