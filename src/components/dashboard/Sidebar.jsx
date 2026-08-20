@@ -11,13 +11,13 @@ const Sidebar = () => {
 
     const navLinks = [
         { href: "/dashboard/founder", label: "Overview", roles: ["founder"] },
+        { href: "/dashboard/collaborator", label: "Overview", roles: ["collaborator"] },
         { href: "/dashboard/profile", label: "Profile", roles: ["founder", "collaborator"] },
         { href: "/dashboard/founder/my-startup", label: "My Startup", roles: ["founder"] },
         { href: "/dashboard/founder/add-opportunities", label:"Add Opportunity", roles: ["founder"] },
         { href: "/dashboard/founder/manage-opportunities", label: "Manage Opportunities", roles: ["founder"] },
         { href: "/dashboard/founder/applications", label: "Applications", roles: ["founder"] },
-        { href: "/dashboard/browse-opportunities", label: "Browse Opportunities", roles: ["collaborator"] },
-        { href: "/dashboard/my-applications", label: "My Applications", roles: ["collaborator"] },
+        { href: "/dashboard/collaborator/my-applications", label: "My Applications", roles: ["collaborator"] },
         { href: "/dashboard/manage-users", label: "Manage Users", roles: ["admin"] },
         { href: "/dashboard/manage-startups", label: "Manage Startups", roles: ["admin"] },
         { href: "/dashboard/transactions", label: "Transactions", roles: ["admin"] },
