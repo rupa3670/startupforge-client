@@ -22,7 +22,7 @@ const AdminOverviewPage = () => {
   useEffect(() => {
     if (!userEmail) return;
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin-overview`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/overview`)
       .then(res => res.json())
       .then(data => setStats(data))
       .catch(err => console.log(err));
