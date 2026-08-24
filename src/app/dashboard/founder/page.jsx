@@ -4,6 +4,9 @@ import OverviewCard from "@/components/dashboard/OverviewCard";
 import OverviewChart from "@/components/dashboard/OverviewChart";
 import { authClient } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
+import { Briefcase } from '@gravity-ui/icons';
+import { BiCheckCircle } from 'react-icons/bi';
+import { FaPeopleGroup } from 'react-icons/fa6';
 
 const FounderOverviewPage = () => {
 
@@ -31,10 +34,16 @@ const FounderOverviewPage = () => {
   }
 
   
-  const cards = [
-    { label: "Total Opportunities", value: stats.opportunities },
-    { label: "Total Applications", value: stats.applications },
-    { label: "Accepted Members", value: stats.accepted },
+   const cards = [
+    { label: "Total Opportunities", value: stats.opportunities, icon: Briefcase },
+    { label: "Total Applications", value: stats.applications, icon: FaPeopleGroup },
+    { label: "Accepted Members", value: stats.accepted, icon: BiCheckCircle },
+  ];
+
+   const chartData = [
+    { name: "Opportunities", value: stats.opportunities },
+    { name: "Applications", value: stats.applications },
+    { name: "Accepted", value: stats.accepted },
   ];
 
   return (
@@ -44,7 +53,7 @@ const FounderOverviewPage = () => {
       <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
         Founder Dashboard Overview
       </h1>
-<OverviewCard stats={stats} />
+<OverviewCard cards={cards} />
 <OverviewChart stats={stats} />
       <div>
         

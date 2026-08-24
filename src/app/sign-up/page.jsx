@@ -105,7 +105,7 @@ const Register = () => {
   const handleGoogleSignUp = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/",
+      callbackURL: "/select-role",
     });
     // toast.success("SignUp successful!");
   };

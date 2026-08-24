@@ -88,8 +88,6 @@ const ManageOpportunities = () => {
       setSaving(false);
     }
   };
-
-  // ---- Delete handlers ----
   const openDeleteModal = (op) => {
     setDeletingOp(op);
   };

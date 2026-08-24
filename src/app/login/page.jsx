@@ -21,28 +21,43 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
-  const handleCredentialLogin = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+ const handleCredentialLogin = async (e) => {
+  e.preventDefault();
+  setError("");
+  setLoading(true);
 
-    const { error: signInError } = await authClient.signIn.email({
-      email,
-      password,
-      callbackURL: redirectTo,
-    });
+  const { data, error: signInError } = await authClient.signIn.email({
+    email,
+    password,
+  });
 
+  if (signInError) {
     setLoading(false);
+    setError(signInError.message || "Invalid email or password.");
+    toast.error(signInError.message || "Login failed!");
+    return;
+  }
 
-    if (signInError) {
-      setError(signInError.message || "Invalid email or password.");
-      toast.error(signInError.message || "Login failed!");
-      return;
+  toast.success("Login successful!");
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${data.user.email}`);
+    const userInfo = await res.json();
+
+    if (searchParams.get("redirect")) {
+      router.push(redirectTo);
+    } else if (userInfo.role === "admin") {
+      router.push("/dashboard/admin/overview");
+    } else if (userInfo.role === "founder") {
+      router.push("/dashboard/founder/overview");
+    } else {
+      router.push("/dashboard/collaborator/overview");
     }
-     toast.success("Login successful!");
-
-    router.push(redirectTo);
-  };
+  } catch (err) {
+    router.push("/"); 
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleGoogleLogin = async () => {
     setError("");

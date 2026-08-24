@@ -10,15 +10,9 @@ import {
 } from "recharts";
 import { ResponsiveContainer } from "recharts";
 
-const COLORS = ["#6366F1", "#A855F7", "#22C55E"]; // blue, purple, green
+const COLORS = ["#6366F1", "#A855F7", "#22C55E", "#F59E0B"];
 
-const OverviewChart = ({ stats }) => {
-  const data = [
-    { name: "Opportunities", value: stats.opportunities },
-    { name: "Applications", value: stats.applications },
-    { name: "Accepted", value: stats.accepted },
-  ];
-
+const OverviewChart = ({ data, title = "Overview Analytics" }) => {
   return (
     <div className="mt-10 rounded-2xl p-6 
       bg-white dark:bg-[#0b0f1a] 
@@ -27,7 +21,7 @@ const OverviewChart = ({ stats }) => {
       
       <h2 className="text-lg font-semibold mb-4 
         text-gray-700 dark:text-gray-200">
-        Overview Analytics
+        {title}
       </h2>
 
       <div className="h-80">

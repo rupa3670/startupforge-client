@@ -1,30 +1,10 @@
 'use client'
-import { Briefcase } from '@gravity-ui/icons';
-import React from 'react';
-import { BiCheckCircle } from 'react-icons/bi';
-import { FaPeopleGroup } from 'react-icons/fa6';
 
-const OverviewCard = ({stats}) => {
+const OverviewCard = ({cards,cols=3}) => {
 
-    const cards =[
-    {
-         label:"Total Opportunities",
-         value: stats.opportunities,
-         icon:Briefcase,
-    },
-     {
-         label:"Total Applications",
-         value: stats.applications,
-         icon: FaPeopleGroup,
-    },
-    {
-        label:"Accepted Members",
-        value:stats.accepted,
-        icon:BiCheckCircle,
-    },
-    ];
     return (
-        <div className='grid grid-cols-1 sm:grid-cols-3 gap-6'>
+        <div className={`grid grid-cols-1 sm:grid-cols-2
+        ${cols===4 ? 'lg:grid-cols-4': 'lg:grid-cols-3'} gap-6`}>
          {
             cards.map((card)=>{
                 const Icon = card.icon;

@@ -12,15 +12,16 @@ const Sidebar = () => {
     const navLinks = [
         { href: "/dashboard/founder", label: "Overview", roles: ["founder"] },
         { href: "/dashboard/collaborator", label: "Overview", roles: ["collaborator"] },
+        { href: "/dashboard/admin", label: "Overview", roles: ["admin"] },
         { href: "/dashboard/profile", label: "Profile", roles: ["founder", "collaborator"] },
         { href: "/dashboard/founder/my-startup", label: "My Startup", roles: ["founder"] },
         { href: "/dashboard/founder/add-opportunities", label: "Add Opportunity", roles: ["founder"] },
         { href: "/dashboard/founder/manage-opportunities", label: "Manage Opportunities", roles: ["founder"] },
         { href: "/dashboard/founder/applications", label: "Applications", roles: ["founder"] },
         { href: "/dashboard/collaborator/my-applications", label: "My Applications", roles: ["collaborator"] },
-        { href: "/dashboard/manage-users", label: "Manage Users", roles: ["admin"] },
-        { href: "/dashboard/manage-startups", label: "Manage Startups", roles: ["admin"] },
-        { href: "/dashboard/transactions", label: "Transactions", roles: ["admin"] },
+        { href: "/dashboard/admin/manage-users", label: "Manage Users", roles: ["admin"] },
+        { href: "/dashboard/admin/manage-startups", label: "Manage Startups", roles: ["admin"] },
+        { href: "/dashboard/admin/transactions", label: "Transactions", roles: ["admin"] },
     ];
 
 
@@ -51,7 +52,7 @@ const Sidebar = () => {
             <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
                 {filteredLinks.map((item) => {
                     const isActive =
-                        item.href === "/dashboard/founder" || item.href === "/dashboard/collaborator"
+                        item.href === "/dashboard/founder" || item.href === "/dashboard/collaborator" ||item.href ==="/dashboard/admin"
                             ? pathname === item.href
                             : pathname.startsWith(item.href);
 

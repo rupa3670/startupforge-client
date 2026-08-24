@@ -75,7 +75,6 @@ const MyStartupPage = () => {
 
     setSubmitting(true);
     try {
-      // ✅ ফর্ম থেকে সরাসরি FormData দিয়ে ডাটা তোলা হচ্ছে, স্টেট থেকে না
       const fd = new FormData(e.target);
       const logoUrl = await uploadLogo();
 
@@ -189,7 +188,6 @@ const MyStartupPage = () => {
             onSubmit={handleSubmit}
             className="relative rounded-2xl border border-indigo-200/50 dark:border-indigo-500/20 bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl shadow-xl shadow-indigo-500/5 p-6 sm:p-8 space-y-6"
           >
-            {/* ✅ কোনো value/onChange নেই — name + defaultValue দিয়ে uncontrolled */}
             <TextField isRequired name="startupName" defaultValue={startup?.startup_name}>
               <Label>Startup Name</Label>
               <Input placeholder="e.g. StartupForge" />
@@ -225,8 +223,6 @@ const MyStartupPage = () => {
               <TextArea rows={4} placeholder="What is your startup building?" />
               <FieldError />
             </TextField>
-
-            {/* Select এখনো controlled রাখা হলো, কারণ selectedKey ছাড়া HeroUI Select এ ভালোভাবে defaultValue হ্যান্ডেল করা কঠিন */}
             <Select selectedKey={fundingStage} onSelectionChange={setFundingStage}>
               <Label>Funding Stage</Label>
               <Select.Trigger>
