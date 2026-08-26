@@ -16,7 +16,6 @@ const MyStartupPage = () => {
   const [startup, setStartup] = useState(null);
   const [editing, setEditing] = useState(false);
 
-  // ✅ শুধু ফান্ডিং স্টেজ state এ রাখা লাগছে, কারণ Select এর জন্য selectedKey দরকার
   const [fundingStage, setFundingStage] = useState(fundingStages[0]);
   const [logoFile, setLogoFile] = useState(null);
   const [logoPreview, setLogoPreview] = useState('');
@@ -81,7 +80,7 @@ const MyStartupPage = () => {
       const startupData = {
         startup_name: fd.get('startupName'),
         founder_name: fd.get('founderName'),
-        team_size_needed: fd.get('teamSizeNeeded'),
+        team_size_needed: Number(fd.get('teamSizeNeeded')),
         logo: logoUrl,
         industry: fd.get('industry'),
         description: fd.get('description'),
@@ -212,9 +211,9 @@ const MyStartupPage = () => {
               <FieldError />
             </TextField>
 
-            <TextField isRequired name="teamSizeNeeded" defaultValue={startup?.team_size_needed}>
+            <TextField isRequired name="teamSizeNeeded" type="number" defaultValue={startup?.team_size_needed}>
               <Label>Team Size Needed</Label>
-              <Input placeholder="e.g. 3 members" />
+              <Input type="number" min="1" placeholder="e.g. 5" />
               <FieldError />
             </TextField>
 
@@ -223,6 +222,7 @@ const MyStartupPage = () => {
               <TextArea rows={4} placeholder="What is your startup building?" />
               <FieldError />
             </TextField>
+
             <Select selectedKey={fundingStage} onSelectionChange={setFundingStage}>
               <Label>Funding Stage</Label>
               <Select.Trigger>

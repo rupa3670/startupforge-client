@@ -42,7 +42,11 @@ const AddOpportunityPage = () => {
       });
 
       const data = await res.json();
-
+if (res.status === 403) {
+    setErrorMsg(data.message);
+    setTimeout(() => router.push(data.redirect || '/pricing'), 1500);
+    return;
+}
       if (data.success) {
         router.push('/dashboard/founder/manage-opportunities');
       } else {
@@ -71,12 +75,12 @@ const AddOpportunityPage = () => {
           </p>
         </div>
 
-        {/* Form card */}
+      
         <form
           onSubmit={handleSubmit}
           className="relative rounded-2xl border border-indigo-200/50 dark:border-indigo-500/20 bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl shadow-xl shadow-indigo-500/5 p-6 sm:p-8 space-y-6"
         >
-          {/* subtle gradient glow accent */}
+          
           <div className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 rounded-full bg-gradient-to-br from-indigo-400/20 to-purple-400/20 blur-3xl" />
 
           <div>

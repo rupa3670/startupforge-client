@@ -54,7 +54,7 @@ const FounderOverviewPage = () => {
         Founder Dashboard Overview
       </h1>
 <OverviewCard cards={cards} />
-<OverviewChart stats={stats} />
+<OverviewChart data={chartData} title="Platform Overview" />
       <div>
         
       </div>
