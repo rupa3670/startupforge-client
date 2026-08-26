@@ -3,6 +3,7 @@ import OpportunityCards from '@/components/home/OpportunityCards';
 import SearchBar from '@/components/opportunities/SearchBar';
 import FilterBar from '@/components/opportunities/FilterBar';
 import { HiOutlineSearchCircle } from 'react-icons/hi';
+import Pagination from '@/components/opportunities/Pagination';
 
 const BrowseOpportunities = async ({ searchParams }) => {
   const params = await searchParams;
@@ -10,36 +11,40 @@ const BrowseOpportunities = async ({ searchParams }) => {
   const search = params?.search || '';
   const workType = params?.workType || '';
   const industry = params?.industry || '';
+  const page = Number(params?.page) || 1;
 
-  const opportunities = await getOpportunities({ search, workType, industry });
+  
+  const { data: opportunities, totalPages, currentPage } = await getOpportunities({
+    search,
+    workType,
+    industry,
+    page,
+    limit: 6,
+  });
 
   return (
     <section className="mx-auto max-w-7xl py-10 px-4 sm:px-6">
-      
+
       <div className="flex flex-col items-center text-center mb-8">
         <span className="inline-block px-3 py-1 text-xs font-semibold tracking-wide rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
           Browse Opportunities
         </span>
-        
       </div>
 
-      
       <div className="flex justify-center mb-8">
         <div className="w-full max-w-xl">
           <SearchBar />
         </div>
       </div>
 
-      
       <div className="flex flex-col lg:flex-row gap-8 items-start">
-       
+
         <aside className="w-full lg:w-64 lg:shrink-0">
           <div className="lg:sticky lg:top-24">
             <FilterBar />
           </div>
         </aside>
 
-        
         <div className="w-full flex-1 min-w-0">
           {opportunities.length === 0 ? (
             <div className="w-full flex flex-col items-center justify-center text-center py-24 px-6 rounded-2xl border border-dashed border-gray-200 dark:border-white/10">
@@ -54,11 +59,15 @@ const BrowseOpportunities = async ({ searchParams }) => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {opportunities.map((opportunity) => (
-                <OpportunityCards key={opportunity._id} opportunity={opportunity} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {opportunities.map((opportunity) => (
+                  <OpportunityCards key={opportunity._id} opportunity={opportunity} />
+                ))}
+              </div>
+
+              <Pagination currentPage={currentPage} totalPages={totalPages} />
+            </>
           )}
         </div>
       </div>
