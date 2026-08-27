@@ -15,7 +15,7 @@ const AddOpportunityPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     setSubmitting(true);
@@ -35,18 +35,23 @@ const AddOpportunityPage = () => {
         deadline,
       };
 
+      const { data: tokenData } = await authClient.token();
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/opportunities`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${tokenData?.token}`,
+        },
         body: JSON.stringify(opportunityData),
       });
 
       const data = await res.json();
-if (res.status === 403) {
-    setErrorMsg(data.message);
-    setTimeout(() => router.push(data.redirect || '/pricing'), 1500);
-    return;
-}
+      if (res.status === 403) {
+          setErrorMsg(data.message);
+          setTimeout(() => router.push(data.redirect || '/pricing'), 1500);
+          return;
+      }
       if (data.success) {
         router.push('/dashboard/founder/manage-opportunities');
       } else {
@@ -75,7 +80,7 @@ if (res.status === 403) {
           </p>
         </div>
 
-      
+        {/* Form card */}
         <form
           onSubmit={handleSubmit}
           className="relative rounded-2xl border border-indigo-200/50 dark:border-indigo-500/20 bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl shadow-xl shadow-indigo-500/5 p-6 sm:p-8 space-y-6"

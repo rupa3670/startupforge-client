@@ -1,4 +1,5 @@
 'use client'
+import { authClient } from "@/lib/auth-client";
 import { Button, Card, CardContent, CardFooter, Chip, Spinner } from '@heroui/react';
 import React, { useEffect, useState } from 'react';
 import { IoTrashBinOutline } from 'react-icons/io5';
@@ -9,25 +10,33 @@ const ManageStartup = () => {
     const [startups, setStartups] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const getAuthHeader = async () => {
+        const { data } = await authClient.token();
+        return { Authorization: `Bearer ${data?.token}` };
+    };
+
     const fetchStartups = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/startups`);
+        const headers = await getAuthHeader();
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/startups`, { headers });
         const data = await res.json();
         setStartups(data);
         setLoading(false);
     };
     useEffect(() => { fetchStartups(); }, []);
+
     const handleApprove = async (id) => {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/startups/${id}/approve`,
-            {
-                method: "PATCH"
-            }
-        );
+        const headers = await getAuthHeader();
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/startups/${id}/approve`, {
+            method: "PATCH",
+            headers,
+        });
         fetchStartups();
     };
     const handleDelete = async (id) => {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/startups/${id}
-            `, {
+        const headers = await getAuthHeader();
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/startups/${id}`, {
             method: "DELETE",
+            headers,
         });
         fetchStartups();
     };
@@ -91,7 +100,6 @@ const ManageStartup = () => {
                     </CardFooter>
                 </Card>
             ))}
-
         </div>
     );
 };

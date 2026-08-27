@@ -22,21 +22,22 @@ const ManageOpportunities = () => {
   const [deletingOp, setDeletingOp] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
-  const fetchOpportunities = () => {
+   const fetchOpportunities = async () => {
     if (!userEmail) return;
     setLoading(true);
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/my-opportunities?email=${userEmail}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setOpportunities(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Failed to fetch opportunities:', err);
-        setLoading(false);
+    try {
+      const { data: tokenData } = await authClient.token();
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/my-opportunities?email=${userEmail}`, {
+        headers: { Authorization: `Bearer ${tokenData?.token}` },
       });
+      const data = await res.json();
+      setOpportunities(data);
+    } catch (err) {
+      console.error('Failed to fetch opportunities:', err);
+    } finally {
+      setLoading(false);
+    }
   };
-
   useEffect(() => {
     if (isPending) return;
     if (!userEmail) {
@@ -46,7 +47,7 @@ const ManageOpportunities = () => {
     fetchOpportunities();
   }, [userEmail, isPending]);
 
-  // ---- Edit handlers ----
+  
   const openEditModal = (op) => {
     setEditingOp(op);
     setEditForm({
@@ -61,14 +62,18 @@ const ManageOpportunities = () => {
     setEditingOp(null);
   };
 
-  const handleEditSubmit = async (e) => {
+    const handleEditSubmit = async (e) => {
     e.preventDefault();
     if (!editingOp) return;
     setSaving(true);
     try {
+      const { data: tokenData } = await authClient.token();
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/opportunities/${editingOp._id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${tokenData?.token}`,
+        },
         body: JSON.stringify(editForm),
       });
       const data = await res.json();
@@ -96,12 +101,14 @@ const ManageOpportunities = () => {
     setDeletingOp(null);
   };
 
-  const confirmDelete = async () => {
+   const confirmDelete = async () => {
     if (!deletingOp) return;
     setDeleting(true);
     try {
+      const { data: tokenData } = await authClient.token();
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/opportunities/${deletingOp._id}`, {
         method: 'DELETE',
+        headers: { Authorization: `Bearer ${tokenData?.token}` },
       });
       const data = await res.json();
       if (data.deletedCount >= 1) {

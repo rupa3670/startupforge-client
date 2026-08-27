@@ -22,10 +22,16 @@ const AdminOverviewPage = () => {
   useEffect(() => {
     if (!userEmail) return;
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/overview`)
-      .then(res => res.json())
-      .then(data => setStats(data))
-      .catch(err => console.log(err));
+    const fetchOverview = async () => {
+      const { data } = await authClient.token();
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/overview`, {
+        headers: { Authorization: `Bearer ${data?.token}` },
+      });
+      const result = await res.json();
+      setStats(result);
+    };
+
+    fetchOverview().catch(err => console.log(err));
 
   }, [userEmail]);
 

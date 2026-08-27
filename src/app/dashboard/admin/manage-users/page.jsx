@@ -1,11 +1,12 @@
 'use client'
+import { authClient } from '@/lib/auth-client';
 import { LockOpenFill } from '@gravity-ui/icons';
 import { Button, Card, CardContent, CardFooter, Chip, Spinner } from '@heroui/react';
 import React, { useEffect, useState } from 'react';
 import { FaEnvelopeCircleCheck } from 'react-icons/fa6';
 import { TbLockBitcoin } from 'react-icons/tb';
 
-// 👇 UserAvatar ManageUsers-এর বাইরে — component প্রতি render-এ নতুন হবে না
+
 const UserAvatar = ({ image, name }) => {
     const [imgError, setImgError] = useState(false);
 
@@ -28,11 +29,17 @@ const UserAvatar = ({ image, name }) => {
 };
 
 const ManageUsers = () => {
-    const [users, setUsers] = useState([]); // "" এর বদলে [] — শুরুতেই array রাখা নিরাপদ
+    const [users, setUsers] = useState([]); 
     const [loading, setLoading] = useState(true);
 
+    const getAuthHeader = async () => {
+        const { data } = await authClient.token();
+        return { Authorization: `Bearer ${data?.token}` };
+    };
+
     const fetchUsers = async () => {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/all-users`);
+        const headers = await getAuthHeader();
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/all-users`, { headers });
         const data = await res.json();
         const filtered = data.filter((user) => user.role !== "admin");
         setUsers(filtered);
@@ -43,9 +50,11 @@ const ManageUsers = () => {
 
     const handleBlockToggle = async (email, isBlocked) => {
         const endpoint = isBlocked ? "unblock" : "block";
-        // 👇 আগে এখানে ${} মিসিং ছিল, ঠিক করা হলো
+        const headers = await getAuthHeader();
+
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${email}/${endpoint}`, {
             method: "PATCH",
+            headers,
         });
         fetchUsers();
     };
@@ -60,7 +69,7 @@ const ManageUsers = () => {
                     className="border border-gray-200 dark:border-white/10 shadow-sm hover:shadow-md transition-shadow"
                 >
                     <CardContent className="items-center text-center gap-2 py-6">
-                        {/* 👇 পুরনো inline image div-এর বদলে UserAvatar ব্যবহার */}
+                       
                         <UserAvatar image={user.image} name={user.name} />
 
                         <p className="font-semibold text-sm mt-2">{user.name}</p>
