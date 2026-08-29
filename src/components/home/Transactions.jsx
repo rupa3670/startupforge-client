@@ -35,7 +35,7 @@ export default function TestimonialsSection() {
             <Card className="h-full border border-slate-200 dark:border-slate-700/50 bg-white/90 dark:bg-slate-800/40 backdrop-blur-md shadow-md dark:shadow-lg rounded-2xl p-6 flex flex-col items-center text-center justify-between space-y-4">
               <div className="relative w-28 h-28 rounded-full overflow-hidden bg-slate-200 dark:bg-slate-700 shadow-md">
                 <Image
-                  src="/assest/womenjfif.jfif"
+                  src="/assest/womenjfif.jpg"
                   alt="Sarah Jones"
                   fill
                   className="object-cover"

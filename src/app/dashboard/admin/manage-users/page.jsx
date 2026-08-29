@@ -49,16 +49,15 @@ const ManageUsers = () => {
     useEffect(() => { fetchUsers(); }, []);
 
     const handleBlockToggle = async (email, isBlocked) => {
-        const endpoint = isBlocked ? "unblock" : "block";
-        const headers = await getAuthHeader();
+    const endpoint = isBlocked ? "unblock" : "block";
+    const headers = await getAuthHeader();
 
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${email}/${endpoint}`, {
-            method: "PATCH",
-            headers,
-        });
-        fetchUsers();
-    };
-
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${email}/${endpoint}`, {
+        method: "PATCH",
+        headers,
+    });
+    fetchUsers();
+};
     if (loading) return <div className="flex justify-center py-20"><Spinner label="Loading users..." /></div>;
 
     return (

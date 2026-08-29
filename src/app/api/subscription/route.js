@@ -2,31 +2,28 @@ import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import { stripe } from '@/lib/stripe';
 
-
-
-export async function POST() {
+export async function POST(req) {
   try {
     const headersList = await headers()
     const origin = headersList.get('origin')
+    const { founderEmail } = await req.json()
 
-    const PRICE_ID="price_1U917VAS6BEMSlklGowAvPTo"
-
+    const PRICE_ID = "price_1U917VAS6BEMSlklGowAvPTo"
 
     // Create Checkout Sessions from body params.
     const session = await stripe.checkout.sessions.create({
       line_items: [
         {
-          // Provide the exact Price ID (for example, price_1234) of the product you want to sell
           price: PRICE_ID,
           quantity: 1,
         },
       ],
       mode: 'subscription',
-     success_url: `${origin}/dashboard/founder/add-opportunities/pricing/success-subscription?session_id={CHECKOUT_SESSION_ID}`,
-      // Provide a name (for example, hosted_web_0001) to label this Checkout integration and measure its conversion independently
-    //   integration_identifier: '{{INTEGRATION_ID}}',
+      metadata: { founder_email: founderEmail },
+      success_url: `${origin}/dashboard/founder/add-opportunities/pricing/success-subscription?session_id={CHECKOUT_SESSION_ID}`,
     });
-    return NextResponse.redirect(session.url, 303)
+
+    return NextResponse.json({ url: session.url })   
   } catch (err) {
     return NextResponse.json(
       { error: err.message },

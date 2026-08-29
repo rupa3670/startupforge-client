@@ -22,25 +22,42 @@ const FounderOverviewPage = () => {
   useEffect(() => {
     if (!userEmail) return;
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/founder-overview?email=${userEmail}`)
-      .then(res => res.json())
-      .then(data => setStats(data))
-      .catch(err => console.log(err));
+    const fetchStats = async () => {
+      try {
+        const { data: tokenData } = await authClient.token();
+        const token = tokenData?.token;
 
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/founder-overview?email=${userEmail}`,
+          { headers: token ? { Authorization: `Bearer ${token}` } : {} }
+        );
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || 'Failed to fetch overview');
+        }
+
+        const data = await res.json();
+        setStats(data);
+      } catch (err) {
+        console.error('Failed to load founder overview:', err);
+      }
+    };
+
+    fetchStats();
   }, [userEmail]);
 
   if (isPending) {
     return <p className="p-6">Loading...</p>;
   }
 
-  
-   const cards = [
+  const cards = [
     { label: "Total Opportunities", value: stats.opportunities, icon: Briefcase },
     { label: "Total Applications", value: stats.applications, icon: FaPeopleGroup },
     { label: "Accepted Members", value: stats.accepted, icon: BiCheckCircle },
   ];
 
-   const chartData = [
+  const chartData = [
     { name: "Opportunities", value: stats.opportunities },
     { name: "Applications", value: stats.applications },
     { name: "Accepted", value: stats.accepted },
@@ -48,17 +65,11 @@ const FounderOverviewPage = () => {
 
   return (
     <div className="p-6 space-y-10">
-
-     
       <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
         Founder Dashboard Overview
       </h1>
-<OverviewCard cards={cards} />
-<OverviewChart data={chartData} title="Platform Overview" />
-      <div>
-        
-      </div>
-
+      <OverviewCard cards={cards} />
+      <OverviewChart data={chartData} title="Platform Overview" />
     </div>
   );
 };

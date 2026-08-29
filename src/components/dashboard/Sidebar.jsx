@@ -24,23 +24,16 @@ const Sidebar = () => {
         { href: "/dashboard/admin/transactions", label: "Transactions", roles: ["admin"] },
     ];
 
-
     if (isPending) {
-        return (
-            <aside className="hidden md:flex flex-col w-[240px] h-screen sticky top-0 bg-white dark:bg-black border-r border-indigo-300/40 dark:border-indigo-500/20">
-                <div className="animate-pulse p-6 space-y-3">
-                    <div className="h-6 bg-indigo-200 dark:bg-indigo-900 rounded w-2/3" />
-                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded" />
-                    <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded" />
-                </div>
-            </aside>
-        );
+        return null;
     }
 
     const filteredLinks = navLinks.filter((item) => item.roles.includes(role));
 
     return (
-        <aside className="hidden md:flex flex-col w-[240px] h-screen sticky top-0 bg-gradient-to-b from-indigo-100 via-white to-white dark:from-indigo-950 dark:via-black dark:to-black border-r border-indigo-300/40 dark:border-indigo-500/20 transition-colors">
+        // Shudhu Desktop-er jonno (lg screen ba tar upore) Side Sidebar thakbe
+        // sm/md device e eta shomponno hidden - Navbar er dropdown e links dekhabe
+        <aside className="hidden lg:flex flex-col w-[240px] h-screen sticky top-0 bg-gradient-to-b from-indigo-100 via-white to-white dark:from-indigo-950 dark:via-black dark:to-black border-r border-indigo-300/40 dark:border-indigo-500/20">
             <div className="px-6 py-6 border-b border-indigo-300/40 dark:border-indigo-500/20">
                 <Link href="/">
                     <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-500 to-purple-500 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
@@ -52,7 +45,7 @@ const Sidebar = () => {
             <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
                 {filteredLinks.map((item) => {
                     const isActive =
-                        item.href === "/dashboard/founder" || item.href === "/dashboard/collaborator" ||item.href ==="/dashboard/admin"
+                        item.href === "/dashboard/founder" || item.href === "/dashboard/collaborator" || item.href === "/dashboard/admin"
                             ? pathname === item.href
                             : pathname.startsWith(item.href);
 
@@ -60,10 +53,11 @@ const Sidebar = () => {
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${isActive
+                            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                                isActive
                                     ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25"
-                                    : "text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-gradient-to-r hover:from-indigo-600/20 hover:to-purple-600/20"
-                                }`}
+                                    : "text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white hover:bg-indigo-500/10"
+                            }`}
                         >
                             {item.label}
                         </Link>
@@ -71,7 +65,7 @@ const Sidebar = () => {
                 })}
             </nav>
 
-            <div className="px-6 py-4 border-t border-indigo-300/40 dark:border-indigo-500/20 text-xs text-gray-500 dark:text-gray-500">
+            <div className="px-6 py-4 border-t border-indigo-300/40 dark:border-indigo-500/20 text-xs text-gray-500">
                 © 2026 StartupForge
             </div>
         </aside>

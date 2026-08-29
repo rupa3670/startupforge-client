@@ -32,7 +32,7 @@ export default function Footer() {
         <div>
           <Link href="/" className="flex items-center gap-2 mb-3">
             <Image
-              src="/assest/logo.jfif"
+              src="/assest/logo.jpg"
               alt="StartupForge logo"
               width={32}
               height={32}

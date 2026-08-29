@@ -1,11 +1,43 @@
+'use client'
 import { Button } from '@heroui/react';
-import React from 'react';
+import React, { useState } from 'react';
 import { IoCheckmarkCircleOutline } from 'react-icons/io5';
+import { authClient } from '@/lib/auth-client';
+import { toast } from 'react-toastify';
 
 const PricingPage = () => {
-    //     const handleUpgrade =async ()=>{
+    const { data: session } = authClient.useSession();
+    const [loading, setLoading] = useState(false);
 
-    //     };
+   const handleUpgrade = async () => {
+    const founderEmail = session?.user?.email;
+    if (!founderEmail) {
+        toast.error('Please log in to upgrade.');
+        return;
+    }
+
+    setLoading(true);
+    try {
+        const res = await fetch('/api/subscription', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ founderEmail }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.error || 'Failed to start checkout');
+        }
+
+        window.location.href = data.url;   // ✅ এখানেই ভুল ছিল, এখন ঠিক
+    } catch (err) {
+        console.error(err);
+        toast.error(err.message || 'Something went wrong');
+        setLoading(false);
+    }
+};
+
     return (
         <section className='mx-auto max-w-5xl py-16 px-4'>
             <h1 className='text-3xl font-bold text-center mb-4'>Choose Your Plan</h1>
@@ -30,17 +62,15 @@ const PricingPage = () => {
                         <li><IoCheckmarkCircleOutline className='text-green-700' /> Advanced analytics</li>
                         <li><IoCheckmarkCircleOutline className='text-green-700' /> Priority support</li>
                     </ul>
-                    <form method='POST' action={'/api/subscription'}>
-                        <Button
-                            type="submit"
-                            className='w-full py-2 rounded-lg bg-primary text-white'
-                        >
-                            Upgrade Now
-                        </Button>
-                    </form>
+                    <Button
+                        onPress={handleUpgrade}
+                        isDisabled={loading}
+                        className='w-full py-2 rounded-lg bg-primary text-white'
+                    >
+                        {loading ? 'Redirecting...' : 'Upgrade Now'}
+                    </Button>
                 </div>
             </div>
-
         </section>
     );
 };
