@@ -2,7 +2,9 @@
 
 StartupForge is a platform that connects **founders** looking for collaborators with **skilled individuals** eager to join early-stage startups. Founders can list opportunities, manage applications, and grow their team, while collaborators can browse and apply to startups that match their interests.
 
-**Live Link:** [https://startupforge-client-mauve.vercel.app/]
+**Live Link:** [https://startupforge-client-mauve.vercel.app/](https://startupforge-client-mauve.vercel.app/)
+
+![StartupForge Banner](./startupforge.png)
 
 ---
 
@@ -76,7 +78,7 @@ startupforge-client/
    npm install
    ```
 
-3. Create a `.env.local` file in the root directory and add the required environment variables (see below).
+3. Create a `.env` file in the root directory and add the required environment variables (see below).
 
 4. Run the development server
 
@@ -90,7 +92,7 @@ startupforge-client/
 
 ## 🔑 Environment Variables
 
-Create a `.env.local` file with the following:
+Create a `.env` file with the following:
 
 ```env
 NEXT_PUBLIC_API_URL=your_backend_api_url
@@ -105,7 +107,7 @@ MONGODB_URL=your_mongodb_connection_string
 PAYMENT_GATEWAY_API_KEY=your_payment_gateway_key
 ```
 
-> ⚠️ Never commit your `.env.local` file. Make sure it's listed in `.gitignore`.
+> ⚠️ Never commit your `.env` file. Make sure it's listed in `.gitignore`.
 
 ---
 
