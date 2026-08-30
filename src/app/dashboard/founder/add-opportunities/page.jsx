@@ -16,7 +16,7 @@ const AddOpportunityPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
- const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     setSubmitting(true);
@@ -49,9 +49,9 @@ const AddOpportunityPage = () => {
 
       const data = await res.json();
       if (res.status === 403) {
-          setErrorMsg(data.message);
-          setTimeout(() => router.push(data.redirect || '/pricing'), 1500);
-          return;
+        setErrorMsg(data.message);
+        setTimeout(() => router.push(data.redirect || '/pricing'), 1500);
+        return;
       }
       if (data.success) {
         router.push('/dashboard/founder/manage-opportunities');
@@ -81,7 +81,7 @@ const AddOpportunityPage = () => {
           onSubmit={handleSubmit}
           className="relative rounded-2xl border border-indigo-200/50 dark:border-indigo-500/20 bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl shadow-xl shadow-indigo-500/5 p-6 sm:p-8 space-y-6"
         >
-          
+
           <div className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 rounded-full bg-gradient-to-br from-indigo-400/20 to-purple-400/20 blur-3xl" />
 
           <div>
@@ -121,11 +121,16 @@ const AddOpportunityPage = () => {
               <select
                 value={workType}
                 onChange={(e) => setWorkType(e.target.value)}
-                className="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 px-4 py-3 text-gray-900 dark:text-white transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500/60 focus:border-transparent"
+                className="w-full rounded-xl border border-gray-200 dark:border-white/10 
+  bg-white dark:bg-[#0f172a] 
+  text-gray-900 dark:text-white 
+  px-4 py-3 
+  focus:outline-none focus:ring-2 focus:ring-indigo-500/60 
+  appearance-none"
               >
-                <option value="Remote">Remote</option>
-                <option value="On-site">On-site</option>
-                <option value="Hybrid">Hybrid</option>
+                <option className="bg-white text-black dark:bg-[#0f172a] dark:text-white" value="Remote">Remote</option>
+                <option className="bg-white text-black dark:bg-[#0f172a] dark:text-white" value="On-site">On-site</option>
+                <option className="bg-white text-black dark:bg-[#0f172a] dark:text-white" value="Hybrid">Hybrid</option>
               </select>
             </div>
 
@@ -136,11 +141,23 @@ const AddOpportunityPage = () => {
               <select
                 value={commitmentLevel}
                 onChange={(e) => setCommitmentLevel(e.target.value)}
-                className="w-full rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-white/5 px-4 py-3 text-gray-900 dark:text-white transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500/60 focus:border-transparent"
+                className="w-full rounded-xl border border-gray-200 dark:border-white/10 
+  bg-white dark:bg-[#0f172a] 
+  text-gray-900 dark:text-white 
+  px-4 py-3 
+  focus:outline-none focus:ring-2 focus:ring-indigo-500/60 
+  focus:border-transparent 
+  appearance-none"
               >
-                <option value="Full-time">Full-time</option>
-                <option value="Part-time">Part-time</option>
-                <option value="Contract">Contract</option>
+                <option className="bg-white text-black dark:bg-[#0f172a] dark:text-white" value="Full-time">
+                  Full-time
+                </option>
+                <option className="bg-white text-black dark:bg-[#0f172a] dark:text-white" value="Part-time">
+                  Part-time
+                </option>
+                <option className="bg-white text-black dark:bg-[#0f172a] dark:text-white" value="Contract">
+                  Contract
+                </option>
               </select>
             </div>
           </div>

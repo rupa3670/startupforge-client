@@ -58,8 +58,11 @@ const PricingPage = () => {
 
                 <div className='relative border-2 border-primary rounded-xl p-8'>
                     {isPremium && (
-                        <span className='absolute top-4 right-4 text-xs font-semibold px-3 py-1 rounded-full bg-primary text-white shadow-md'>
-                            Premium
+                        <span className="absolute top-4 right-4 px-3 py-1 text-xs font-semibold rounded-full 
+  bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md
+  backdrop-blur-md border border-white/20
+  dark:border-white/10 dark:shadow-lg">
+                             Premium
                         </span>
                     )}
 

@@ -4,7 +4,7 @@ StartupForge is a platform that connects **founders** looking for collaborators 
 
 **Live Link:** [https://startupforge-client-mauve.vercel.app/](https://startupforge-client-mauve.vercel.app/)
 
-![StartupForge Banner](./startupforge.png)
+![StartupForge Banner](./starupforge.png)
 
 ---
 
