@@ -4,6 +4,11 @@ import { usePathname } from 'next/navigation';
 import React from 'react';
 import { authClient } from '@/lib/auth-client';
 
+const isOverviewLinkCheck = (item) =>
+    item.href === "/dashboard/founder" ||
+    item.href === "/dashboard/collaborator" ||
+    item.href === "/dashboard/admin";
+
 const Sidebar = () => {
     const pathname = usePathname();
     const { data: session, isPending } = authClient.useSession();
@@ -18,6 +23,7 @@ const Sidebar = () => {
         { href: "/dashboard/founder/add-opportunities", label: "Add Opportunity", roles: ["founder"] },
         { href: "/dashboard/founder/manage-opportunities", label: "Manage Opportunities", roles: ["founder"] },
         { href: "/dashboard/founder/applications", label: "Applications", roles: ["founder"] },
+        { href: "/dashboard/founder/add-opportunities/pricing", label: "Pricing", roles: ["founder"] },
         { href: "/dashboard/collaborator/my-applications", label: "My Applications", roles: ["collaborator"] },
         { href: "/dashboard/admin/manage-users", label: "Manage Users", roles: ["admin"] },
         { href: "/dashboard/admin/manage-startups", label: "Manage Startups", roles: ["admin"] },
@@ -31,8 +37,6 @@ const Sidebar = () => {
     const filteredLinks = navLinks.filter((item) => item.roles.includes(role));
 
     return (
-        // Shudhu Desktop-er jonno (lg screen ba tar upore) Side Sidebar thakbe
-        // sm/md device e eta shomponno hidden - Navbar er dropdown e links dekhabe
         <aside className="hidden lg:flex flex-col w-[240px] h-screen sticky top-0 bg-gradient-to-b from-indigo-100 via-white to-white dark:from-indigo-950 dark:via-black dark:to-black border-r border-indigo-300/40 dark:border-indigo-500/20">
             <div className="px-6 py-6 border-b border-indigo-300/40 dark:border-indigo-500/20">
                 <Link href="/">
@@ -44,10 +48,21 @@ const Sidebar = () => {
 
             <nav className="flex-1 px-3 py-6 space-y-1 overflow-y-auto">
                 {filteredLinks.map((item) => {
-                    const isActive =
-                        item.href === "/dashboard/founder" || item.href === "/dashboard/collaborator" || item.href === "/dashboard/admin"
-                            ? pathname === item.href
-                            : pathname.startsWith(item.href);
+                    const isOverviewLink = isOverviewLinkCheck(item);
+
+                    let isActive;
+                    if (isOverviewLink) {
+                        isActive = pathname === item.href;
+                    } else {
+                        const matchingLinks = filteredLinks.filter(
+                            (l) => !isOverviewLinkCheck(l) && pathname.startsWith(l.href)
+                        );
+                        const longestMatch = matchingLinks.reduce(
+                            (longest, l) => (l.href.length > longest.href.length ? l : longest),
+                            { href: "" }
+                        );
+                        isActive = item.href === longestMatch.href;
+                    }
 
                     return (
                         <Link

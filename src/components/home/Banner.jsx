@@ -67,7 +67,6 @@ export default function Banner() {
           variants={fadeUp}
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}
-          href="/dashboard/startup/new"
           className="inline-block bg-blue-600 hover:bg-blue-700 dark:bg-indigo-600 dark:hover:bg-indigo-700 text-white text-sm sm:text-base font-semibold px-8 py-3 rounded-xl shadow-md hover:shadow-blue-500/25 transition-all duration-200"
         >
           Post your startup

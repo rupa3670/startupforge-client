@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
+import { HiOutlineBriefcase } from 'react-icons/hi';
 
 const AddOpportunityPage = () => {
   const router = useRouter();
@@ -68,16 +69,11 @@ const AddOpportunityPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0a0a12] dark:via-black dark:to-[#0f0a1a] px-4 py-10 sm:px-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <p className="text-xs font-semibold tracking-[0.2em] text-indigo-500 dark:text-indigo-400 uppercase mb-2">
-            Founder Dashboard
-          </p>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Post a new opportunity
-          </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-2 text-sm">
-            Tell collaborators what role you&apos;re hiring for and what it takes to join your team.
-          </p>
+        <div className="flex justify-center mb-8">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold tracking-wide rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+            <HiOutlineBriefcase size={14} />
+            Add Opportunity
+          </span>
         </div>
 
         {/* Form card */}

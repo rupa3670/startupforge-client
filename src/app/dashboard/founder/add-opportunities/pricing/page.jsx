@@ -9,34 +9,36 @@ const PricingPage = () => {
     const { data: session } = authClient.useSession();
     const [loading, setLoading] = useState(false);
 
-   const handleUpgrade = async () => {
-    const founderEmail = session?.user?.email;
-    if (!founderEmail) {
-        toast.error('Please log in to upgrade.');
-        return;
-    }
+    const isPremium = session?.user?.plan === 'premium';
 
-    setLoading(true);
-    try {
-        const res = await fetch('/api/subscription', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ founderEmail }),
-        });
-
-        const data = await res.json();
-
-        if (!res.ok) {
-            throw new Error(data.error || 'Failed to start checkout');
+    const handleUpgrade = async () => {
+        const founderEmail = session?.user?.email;
+        if (!founderEmail) {
+            toast.error('Please log in to upgrade.');
+            return;
         }
 
-        window.location.href = data.url;   // ✅ এখানেই ভুল ছিল, এখন ঠিক
-    } catch (err) {
-        console.error(err);
-        toast.error(err.message || 'Something went wrong');
-        setLoading(false);
-    }
-};
+        setLoading(true);
+        try {
+            const res = await fetch('/api/subscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ founderEmail }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to start checkout');
+            }
+
+            window.location.href = data.url;
+        } catch (err) {
+            console.error(err);
+            toast.error(err.message || 'Something went wrong');
+            setLoading(false);
+        }
+    };
 
     return (
         <section className='mx-auto max-w-5xl py-16 px-4'>
@@ -53,7 +55,14 @@ const PricingPage = () => {
                     </ul>
                     <Button isDisabled className='w-full py-2 rounded-lg border cursor-not-allowed'>Current Plan</Button>
                 </div>
-                <div className='border-2 border-primary rounded-xl p-8'>
+
+                <div className='relative border-2 border-primary rounded-xl p-8'>
+                    {isPremium && (
+                        <span className='absolute top-4 right-4 text-xs font-semibold px-3 py-1 rounded-full bg-primary text-white shadow-md'>
+                            Premium
+                        </span>
+                    )}
+
                     <h3 className='text-xl font-semibold mb-2'>Premium</h3>
                     <p className='text-3xl font-bold mb-4'>$12<span className='text-base font-normal'>/month</span></p>
                     <ul className='space-y-2 mb-6 text-sm text-gray-600 dark:text-gray-400'>
@@ -62,13 +71,18 @@ const PricingPage = () => {
                         <li><IoCheckmarkCircleOutline className='text-green-700' /> Advanced analytics</li>
                         <li><IoCheckmarkCircleOutline className='text-green-700' /> Priority support</li>
                     </ul>
-                    <Button
-                        onPress={handleUpgrade}
-                        isDisabled={loading}
-                        className='w-full py-2 rounded-lg bg-primary text-white'
-                    >
-                        {loading ? 'Redirecting...' : 'Upgrade Now'}
-                    </Button>
+
+                    {isPremium ? (
+                        <Button isDisabled className='w-full py-2 rounded-lg border cursor-not-allowed'>Current Plan</Button>
+                    ) : (
+                        <Button
+                            onPress={handleUpgrade}
+                            isDisabled={loading}
+                            className='w-full py-2 rounded-lg bg-primary text-white'
+                        >
+                            {loading ? 'Redirecting...' : 'Upgrade Now'}
+                        </Button>
+                    )}
                 </div>
             </div>
         </section>

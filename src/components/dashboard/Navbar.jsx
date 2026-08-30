@@ -4,6 +4,8 @@ import ThemeSwitch from '../home/ThemeSwitch';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { authClient } from "@/lib/auth-client";
+import { ArrowRightToSquare } from '@gravity-ui/icons';
+import { HiHome } from 'react-icons/hi';
 
 const navLinks = [
     { href: "/dashboard/founder", label: "Overview", roles: ["founder"] },
@@ -41,13 +43,11 @@ const Navbar = () => {
               .toUpperCase()
         : "U";
 
-    // Route change hole mobile menu ar dropdown duitai bondho hoye jabe
     useEffect(() => {
         setMenuOpen(false);
         setDropdownOpen(false);
     }, [pathname]);
 
-    // Click outside korle dropdown / mobile menu bondho hoye jabe
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -77,7 +77,7 @@ const Navbar = () => {
         <div className="relative">
             <header className="h-16 w-full flex items-center justify-between px-4 md:px-6 bg-gray-50 dark:bg-black/60 backdrop-blur-md border-b border-indigo-300/40 dark:border-indigo-500/20 sticky top-0 z-50 transition-colors">
                 <div className="flex items-center gap-3">
-                    {/* Hamburger - shudhu mobile/tablet e dekhabe (lg er niche), logo nai */}
+
                     <div className="lg:hidden" ref={menuRef}>
                         <button
                             onClick={() => setMenuOpen(!menuOpen)}
@@ -93,7 +93,6 @@ const Navbar = () => {
                             </svg>
                         </button>
 
-                        {/* Mobile dropdown menu - sidebar er links ekhane */}
                         {menuOpen && (
                             <div className="absolute left-0 top-full mt-0 w-full bg-white dark:bg-black border-b border-gray-200 dark:border-gray-800 shadow-xl px-4 py-3 space-y-1 max-h-[80vh] overflow-y-auto z-50">
                                 {filteredLinks.map((item) => {
@@ -159,15 +158,7 @@ const Navbar = () => {
                                         onClick={() => setDropdownOpen(false)}
                                         className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 transition-colors"
                                     >
-                                        🏠 Home
-                                    </Link>
-
-                                    <Link
-                                        href="/dashboard/profile"
-                                        onClick={() => setDropdownOpen(false)}
-                                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 transition-colors"
-                                    >
-                                        👤 Profile
+                                        <HiHome /> Home
                                     </Link>
 
                                     <div className="border-t border-gray-100 dark:border-neutral-800 my-1" />
@@ -176,7 +167,8 @@ const Navbar = () => {
                                         onClick={handleLogout}
                                         className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-left"
                                     >
-                                        🚪 Logout
+                                        <ArrowRightToSquare width={18} height={18} />
+                                        Logout
                                     </button>
                                 </div>
                             )}

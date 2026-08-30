@@ -7,6 +7,7 @@ import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { FcGoogle } from "react-icons/fc";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Register = () => {
   const router = useRouter();
@@ -15,6 +16,7 @@ const Register = () => {
     name: "",
     email: "",
     password: "",
+    confirmPassword: "",
     role: "collaborator",
   });
 
@@ -22,6 +24,9 @@ const Register = () => {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -54,7 +59,7 @@ const Register = () => {
     );
 
     const data = await res.json();
-    return data?.data?.url ||"/assest/avatar.png" ;
+    return data?.data?.url || "/assest/avatar.png";
   };
 
   const handleSubmit = async (e) => {
@@ -63,8 +68,14 @@ const Register = () => {
 
     if (!validatePassword(formData.password)) {
       setError(
-        "Password must be at least 6 characters and include one uppercase and one lowercase letter."
+        "Password must be at least 8 characters and include one uppercase and one lowercase letter."
       );
+      return;
+    }
+
+    // NEW: confirm password check
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match.");
       return;
     }
 
@@ -78,7 +89,7 @@ const Register = () => {
         name: formData.name,
         image: imageUrl || "",
         role: formData.role,
-        plan:"free",
+        plan: "free",
       });
 
       if (signUpError) {
@@ -88,8 +99,6 @@ const Register = () => {
       }
 
       if (data) {
-        // Sign the user out right after registration so they don't get
-        // an authenticated session / home page access automatically.
         await authClient.signOut();
         toast.success("Account created successfully! Please log in.");
         router.push("/login");
@@ -105,9 +114,8 @@ const Register = () => {
   const handleGoogleSignUp = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/select-role",
+      callbackURL: "/",
     });
-    // toast.success("SignUp successful!");
   };
 
   return (
@@ -169,20 +177,58 @@ const Register = () => {
             </TextField>
 
             {/* Password */}
-            <TextField name="password" type="password" isRequired>
+            <TextField name="password" isRequired>
               <Label>Password</Label>
-              <Input
-                name="password"
-                type="password"
-                placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleChange}
-              />
+              <div className="relative">
+                <Input
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
+                </button>
+              </div>
             </TextField>
 
             <p className="text-xs text-gray-400 -mt-2">
-              Min 6 characters, one uppercase & one lowercase letter
+              Min 8 characters, one uppercase & one lowercase letter
             </p>
+
+            {/* Confirm Password */}
+            <TextField name="confirmPassword" isRequired>
+              <Label>Confirm Password</Label>
+              <div className="relative">
+                <Input
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Re-enter your password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                  tabIndex={-1}
+                >
+                  {showConfirmPassword ? (
+                    <FaEyeSlash size={16} />
+                  ) : (
+                    <FaEye size={16} />
+                  )}
+                </button>
+              </div>
+            </TextField>
 
             {/* Role */}
             <div>

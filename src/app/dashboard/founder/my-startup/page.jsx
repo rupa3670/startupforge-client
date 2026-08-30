@@ -23,37 +23,37 @@ const MyStartupPage = () => {
   const [deleting, setDeleting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
- useEffect(() => {
-  if (isPending) return;
-  if (!session?.user?.email) {
-    setLoading(false);
-    return;
-  }
-
-  const fetchStartup = async () => {
-    try {
-      const { data: tokenData } = await authClient.token();
-      const token = tokenData?.token;
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/my-startup?email=${session.user.email}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      const data = await res.json();
-      setStartup(data);
-      if (data) {
-        setFundingStage(data.funding_stage || fundingStages[0]);
-        setLogoPreview(data.logo || '');
-      }
-    } catch (err) {
-     
-    } finally {
+  useEffect(() => {
+    if (isPending) return;
+    if (!session?.user?.email) {
       setLoading(false);
+      return;
     }
-  };
 
-  fetchStartup();
-}, [isPending, session?.user?.email]);
+    const fetchStartup = async () => {
+      try {
+        const { data: tokenData } = await authClient.token();
+        const token = tokenData?.token;
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/my-startup?email=${session.user.email}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const data = await res.json();
+        setStartup(data);
+        if (data) {
+          setFundingStage(data.funding_stage || fundingStages[0]);
+          setLogoPreview(data.logo || '');
+        }
+      } catch (err) {
+
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStartup();
+  }, [isPending, session?.user?.email]);
 
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
@@ -75,62 +75,62 @@ const MyStartupPage = () => {
     return data.data.url;
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setErrorMsg('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrorMsg('');
 
-  if (!startup && !logoFile) {
-    setErrorMsg('Please upload a logo.');
-    return;
-  }
-
-  setSubmitting(true);
-  try {
-    const fd = new FormData(e.target);
-    const logoUrl = await uploadLogo();
-
-    const startupData = {
-      startup_name: fd.get('startupName'),
-      founder_name: fd.get('founderName'),
-      team_size_needed: Number(fd.get('teamSizeNeeded')),
-      logo: logoUrl,
-      industry: fd.get('industry'),
-      description: fd.get('description'),
-      funding_stage: fundingStage,
-      founder_email: session?.user?.email,
-      ...(!startup && { status: 'pending' }),
-    };
-
-    // token nao
-    const { data: tokenData } = await authClient.token();
-    const token = tokenData?.token;
-
-    const isEdit = Boolean(startup?._id);
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/startup${isEdit ? `/${startup._id}` : ''}`,
-      {
-        method: isEdit ? 'PATCH' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,   // ← ei line ta add koro
-        },
-        body: JSON.stringify(startupData),
-      }
-    );
-    const data = await res.json();
-
-    if (data.success) {
-      setStartup({ ...startupData, _id: startup?._id || data.insertedId, status: startup?.status || 'pending' });
-      setEditing(false);
-    } else {
-      setErrorMsg(data.message || 'Something went wrong. Please try again.');
+    if (!startup && !logoFile) {
+      setErrorMsg('Please upload a logo.');
+      return;
     }
-  } catch (err) {
-    setErrorMsg('Could not save your startup. Please try again.');
-  } finally {
-    setSubmitting(false);
-  }
-};
+
+    setSubmitting(true);
+    try {
+      const fd = new FormData(e.target);
+      const logoUrl = await uploadLogo();
+
+      const startupData = {
+        startup_name: fd.get('startupName'),
+        founder_name: fd.get('founderName'),
+        team_size_needed: Number(fd.get('teamSizeNeeded')),
+        logo: logoUrl,
+        industry: fd.get('industry'),
+        description: fd.get('description'),
+        funding_stage: fundingStage,
+        founder_email: session?.user?.email,
+        ...(!startup && { status: 'pending' }),
+      };
+
+      // token nao
+      const { data: tokenData } = await authClient.token();
+      const token = tokenData?.token;
+
+      const isEdit = Boolean(startup?._id);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/startup${isEdit ? `/${startup._id}` : ''}`,
+        {
+          method: isEdit ? 'PATCH' : 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,   // ← ei line ta add koro
+          },
+          body: JSON.stringify(startupData),
+        }
+      );
+      const data = await res.json();
+
+      if (data.success) {
+        setStartup({ ...startupData, _id: startup?._id || data.insertedId, status: startup?.status || 'pending' });
+        setEditing(false);
+      } else {
+        setErrorMsg(data.message || 'Something went wrong. Please try again.');
+      }
+    } catch (err) {
+      setErrorMsg('Could not save your startup. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
   const handleDelete = async () => {
     const confirmed = window.confirm('Delete your startup profile? This cannot be undone.');
     if (!confirmed) return;
@@ -163,7 +163,7 @@ const MyStartupPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0a0a12] dark:via-black dark:to-[#0f0a1a] px-4 py-10 sm:px-6">
       <div className="max-w-2xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">My Startup</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white text-center">My Startup</h1>
         </div>
 
         {errorMsg && !showForm && <p className="text-sm text-red-500 dark:text-red-400 mb-4">{errorMsg}</p>}

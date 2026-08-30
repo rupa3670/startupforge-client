@@ -11,11 +11,11 @@ export default function TestimonialsSection() {
     <section className="w-full py-16 px-4 flex justify-center items-center bg-slate-50 dark:bg-[#0B0E14] transition-colors duration-300">
       {/* Outer Glassmorphic Frame */}
       <div className="w-full max-w-5xl rounded-3xl bg-white/80 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 p-8 sm:p-12 shadow-xl dark:shadow-2xl backdrop-blur-md text-slate-900 dark:text-white transition-colors duration-300">
-        
+
         {/* Section Header */}
         <div className="text-center mb-10 space-y-2">
           <h2 className="text-3xl sm:text-4xl font-extrabold tracking-wider uppercase text-slate-900 dark:text-white">
-            Transactions
+            Testimonials
           </h2>
           <div className="text-slate-600 dark:text-slate-300 text-sm sm:text-base">
             What startup founders and collaborators say about StartupForge
@@ -24,7 +24,7 @@ export default function TestimonialsSection() {
 
         {/* 3 Columns Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          
+
           {/* Card 1 */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -111,7 +111,7 @@ export default function TestimonialsSection() {
 
         </div>
 
-       
+
 
       </div>
     </section>

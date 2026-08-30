@@ -11,8 +11,8 @@ const workTypeOptions = [
 ];
 
 const industryOptions = [
-  { id: 'EdTech', name: 'EdTech' },
-  { id: 'HealthTech', name: 'HealthTech' },
+  { id: 'EduTech', name: 'EduTech' },
+  { id: 'AgroLink', name: 'AgroLink' },
   { id: 'FoodTech', name: 'FoodTech' },
   { id: 'Developer Tools', name: 'Developer Tools' },
 ];

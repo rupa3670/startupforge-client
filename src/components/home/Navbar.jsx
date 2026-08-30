@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Bars, Xmark, Person, ArrowRightFromSquare } from "@gravity-ui/icons";
+import { Bars, Xmark, Person, ArrowRightFromSquare, LayoutList } from "@gravity-ui/icons";
 import { authClient } from "@/lib/auth-client";
 import ThemeSwitch from "./ThemeSwitch";
 
@@ -24,7 +24,6 @@ export default function Navbar() {
 
   const { data: session, isPending } = authClient.useSession();
 
-  // close the account dropdown on outside click
   useEffect(() => {
     function handleClickOutside(e) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -35,6 +34,9 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
   const pathname = usePathname();
+
+  const loginHref = `/login?redirect=${encodeURIComponent(pathname)}`;
+
   if(pathname.includes("dashboard")){
     return null
   }
@@ -96,7 +98,13 @@ export default function Navbar() {
           <ThemeSwitch />
 
           {!isPending && session?.user ? (
-            <div className="relative" ref={dropdownRef}>
+            <div className="relative flex items-center gap-2" ref={dropdownRef}>
+              {session.user.role && (
+                <span className="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold capitalize bg-indigo-100 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+                  {session.user.role}
+                </span>
+              )}
+
               <button
                 onClick={() => setIsDropdownOpen((v) => !v)}
                 aria-label="Account menu"
@@ -122,15 +130,16 @@ export default function Navbar() {
                     className="flex items-center gap-2 px-3 py-2 text-sm rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                     onClick={() => setIsDropdownOpen(false)}
                   >
+                    <LayoutList height={18} width={18}/>
                     Dashboard
                   </Link>
-                  <Link
+                  {/* <Link
                     href="/profile"
                     className="flex items-center gap-2 px-3 py-2 text-sm rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                     onClick={() => setIsDropdownOpen(false)}
                   >
                     <Person width={16} height={16} /> Profile
-                  </Link>
+                  </Link> */}
                   <button
                     onClick={handleLogout}
                     className="w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md text-blue-600 dark:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800"
@@ -143,7 +152,7 @@ export default function Navbar() {
           ) : (
             !isPending && (
               <Link
-                href="/login"
+                href={loginHref}
                 className="text-sm font-medium px-4 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-700 text-white"
               >
                 Login
@@ -151,7 +160,7 @@ export default function Navbar() {
             )
           )}
 
-          {/* Mobile menu toggle */}
+         
           <button
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             className="md:hidden p-1 text-gray-700 dark:text-gray-200"
@@ -162,7 +171,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile menu */}
+      
       {isMenuOpen && (
         <div className="md:hidden border-t border-gray-200 dark:border-gray-800 px-4 py-3 space-y-1">
           {publicLinks.map((link) => (
@@ -177,7 +186,7 @@ export default function Navbar() {
           ))}
           {!session?.user && (
             <Link
-              href="/login"
+              href={loginHref}
               className="block py-2 text-sm font-medium text-indigo-600 dark:text-indigo-400"
               onClick={() => setIsMenuOpen(false)}
             >
