@@ -23,7 +23,7 @@ const BrowseOpportunities = async ({ searchParams }) => {
   });
 
   return (
-    <section className="mx-auto max-w-7xl py-10 px-4 sm:px-6">
+    <section className="mx-auto max-w-7xl py-10 px-4 sm:px-6 min-h-screen">
 
       <div className="flex flex-col items-center text-center mb-8">
         <span className="inline-block px-3 py-1 text-xs font-semibold tracking-wide rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">

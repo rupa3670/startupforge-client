@@ -8,9 +8,11 @@ const BrowseStartUp = async () => {
     const startups = await res.json();
     return (
         <section className='py-12 mx-auto max-w-7xl container'>
-            <h2 className='text-2xl md:text-3xl font-bold mb-10 text-center text-gray-900 dark:text-white'>
-         Browse Startups
-            </h2>
+            <div className="flex flex-col items-center text-center mb-8">
+        <span className="inline-block px-3 py-1 text-xs font-semibold tracking-wide rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+          Browse Startup
+        </span>
+      </div>
             {startups.length === 0?
             (<p className='text-center text-gray-500 dark:text-gray-400'>No Startups found</p>
 

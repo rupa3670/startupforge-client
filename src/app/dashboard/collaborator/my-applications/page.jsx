@@ -85,7 +85,11 @@ const CollaboratorApplications = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Applications</h1>
+       <div className="flex justify-center mb-8">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold tracking-wide rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+                 My Application
+                </span>
+              </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {applications.map((app) => (

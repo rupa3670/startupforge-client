@@ -1,5 +1,7 @@
+import AutoRedirect from '@/components/opportunities/AutoRedirect'
 import { stripe } from '@/lib/stripe'
 import { redirect } from 'next/navigation'
+
 
 export default async function Success({ searchParams }) {
   const { session_id } = await searchParams
@@ -14,7 +16,7 @@ export default async function Success({ searchParams }) {
   if (status === 'open') return redirect('/')
 
   if (status === 'complete') {
-   await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments`, {
+    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -26,11 +28,15 @@ export default async function Success({ searchParams }) {
     })
 
     return (
-      <section id="success">
-        <p>
+      <section id="success" className="min-h-screen flex flex-col items-center justify-center gap-3 px-4 text-center">
+        <p className="text-lg font-medium text-gray-900 dark:text-white">
           We appreciate your business! A confirmation email will be sent to{' '}
           {customer_details?.email}.
         </p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Redirecting you to Add Opportunity in a moment...
+        </p>
+        <AutoRedirect to="/dashboard/founder/add-opportunities" delay={2000} />
       </section>
     )
   }

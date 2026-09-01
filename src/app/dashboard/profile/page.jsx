@@ -96,9 +96,11 @@ const ProfilePage = () => {
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-[#0a0a12] dark:via-black dark:to-[#0f0a1a] px-4 py-6 sm:py-10 sm:px-6">
             <div className="max-w-2xl mx-auto">
-                <div className="mb-6 sm:mb-8">
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">My Profile</h1>
-                </div>
+                <div className="flex justify-center mb-8">
+                         <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold tracking-wide rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+                        My profile
+                         </span>
+                       </div>
 
                 {errorMsg && !editing && <p className="text-sm text-red-500 dark:text-red-400 mb-4">{errorMsg}</p>}
 

@@ -1,18 +1,16 @@
 'use client'
 import { authClient } from '@/lib/auth-client';
 import { LockOpenFill } from '@gravity-ui/icons';
-import { Button, Card, CardContent, CardFooter, Chip, Spinner } from '@heroui/react';
+import { Button, Chip, Spinner } from '@heroui/react';
 import React, { useEffect, useState } from 'react';
-import { FaEnvelopeCircleCheck } from 'react-icons/fa6';
 import { TbLockBitcoin } from 'react-icons/tb';
 import { HiOutlineUsers } from 'react-icons/hi';
-
 
 const UserAvatar = ({ image, name }) => {
     const [imgError, setImgError] = useState(false);
 
     return (
-        <div className="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-blue-100 to-indigo-200 dark:from-blue-950 dark:to-indigo-950 flex items-center justify-center shrink-0">
+        <div className="w-11 h-11 rounded-full overflow-hidden bg-gradient-to-br from-indigo-100 to-purple-200 dark:from-indigo-950 dark:to-purple-950 flex items-center justify-center shrink-0">
             {image && !imgError ? (
                 <img
                     src={image}
@@ -21,7 +19,7 @@ const UserAvatar = ({ image, name }) => {
                     onError={() => setImgError(true)}
                 />
             ) : (
-                <span className="text-lg font-semibold text-blue-500">
+                <span className="text-sm font-semibold text-indigo-500">
                     {name?.charAt(0).toUpperCase() || "U"}
                 </span>
             )}
@@ -30,7 +28,7 @@ const UserAvatar = ({ image, name }) => {
 };
 
 const ManageUsers = () => {
-    const [users, setUsers] = useState([]); 
+    const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const getAuthHeader = async () => {
@@ -50,15 +48,16 @@ const ManageUsers = () => {
     useEffect(() => { fetchUsers(); }, []);
 
     const handleBlockToggle = async (email, isBlocked) => {
-    const endpoint = isBlocked ? "unblock" : "block";
-    const headers = await getAuthHeader();
+        const endpoint = isBlocked ? "unblock" : "block";
+        const headers = await getAuthHeader();
 
-    await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${email}/${endpoint}`, {
-        method: "PATCH",
-        headers,
-    });
-    fetchUsers();
-};
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/${email}/${endpoint}`, {
+            method: "PATCH",
+            headers,
+        });
+        fetchUsers();
+    };
+
     if (loading) return <div className="flex justify-center py-20"><Spinner label="Loading users..." /></div>;
 
     return (
@@ -75,24 +74,98 @@ const ManageUsers = () => {
                 </p>
             </div>
 
-            {/* User grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {/* ── Desktop / tablet: table layout ── */}
+            <div className="hidden sm:block rounded-2xl border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl shadow-sm overflow-hidden">
+                <table className="w-full text-sm">
+                    <thead>
+                        <tr className="border-b border-gray-200 dark:border-white/10 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                            <th className="px-6 py-4 font-semibold">User</th>
+                            <th className="px-6 py-4 font-semibold">Role</th>
+                            <th className="px-6 py-4 font-semibold">Status</th>
+                            <th className="px-6 py-4 font-semibold text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 dark:divide-white/5">
+                        {users.map((user) => (
+                            <tr
+                                key={user._id}
+                                className="hover:bg-indigo-50/50 dark:hover:bg-white/[0.03] transition-colors"
+                            >
+                                <td className="px-6 py-4">
+                                    <div className="flex items-center gap-3">
+                                        <UserAvatar image={user.image} name={user.name} />
+                                        <div className="min-w-0">
+                                            <p className="font-semibold text-gray-900 dark:text-white truncate">
+                                                {user.name}
+                                            </p>
+                                            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                                {user.email}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td className="px-6 py-4">
+                                    <Chip size="sm" variant="flat" color="primary">
+                                        {user.role || "no role"}
+                                    </Chip>
+                                </td>
+                                <td className="px-6 py-4">
+                                    <Chip
+                                        size="sm"
+                                        variant="flat"
+                                        color={user.isBlocked ? "danger" : "success"}
+                                    >
+                                        {user.isBlocked ? "Blocked" : "Active"}
+                                    </Chip>
+                                </td>
+                                <td className="px-6 py-4 text-right">
+                                    <Button
+                                        size="sm"
+                                        variant="flat"
+                                        startContent={user.isBlocked ? <LockOpenFill width={16} /> : <TbLockBitcoin width={16} />}
+                                        onPress={() => handleBlockToggle(user.email, user.isBlocked)}
+                                        className={
+                                            user.isBlocked
+                                                ? "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 dark:text-emerald-400 dark:hover:bg-emerald-500/20"
+                                                : "bg-red-500/10 text-red-600 hover:bg-red-500/20 dark:text-red-400 dark:hover:bg-red-500/20"
+                                        }
+                                    >
+                                        {user.isBlocked ? "Unblock" : "Block"}
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                {users.length === 0 && (
+                    <p className="text-center text-sm text-gray-500 dark:text-gray-400 py-10">
+                        No users found.
+                    </p>
+                )}
+            </div>
+
+
+            <div className="sm:hidden space-y-3">
                 {users.map((user) => (
-                    <Card
+                    <div
                         key={user._id}
-                        className="border border-gray-200 dark:border-white/10 shadow-sm hover:shadow-md transition-shadow"
+                        className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl shadow-sm p-4 space-y-3"
                     >
-                        <CardContent className="items-center text-center gap-2 py-6">
-
+                        <div className="flex items-center gap-3">
                             <UserAvatar image={user.image} name={user.name} />
-
-                            <p className="font-semibold text-sm mt-2">{user.name}</p>
-                            <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-                                <FaEnvelopeCircleCheck width={12} height={12} />
-                                <span className="truncate max-w-[180px]">{user.email}</span>
+                            <div className="min-w-0 flex-1">
+                                <p className="font-semibold text-sm text-gray-900 dark:text-white truncate">
+                                    {user.name}
+                                </p>
+                                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                    {user.email}
+                                </p>
                             </div>
+                        </div>
 
-                            <div className="flex gap-2 mt-2">
+                        <div className="flex items-center justify-between">
+                            <div className="flex gap-2">
                                 <Chip size="sm" variant="flat" color="primary">
                                     {user.role || "no role"}
                                 </Chip>
@@ -104,22 +177,28 @@ const ManageUsers = () => {
                                     {user.isBlocked ? "Blocked" : "Active"}
                                 </Chip>
                             </div>
-                        </CardContent>
-
-                        <CardFooter className="pt-0 justify-center">
                             <Button
                                 size="sm"
-                                fullWidth
-                                color={user.isBlocked ? "success" : "danger"}
                                 variant="flat"
-                                startContent={user.isBlocked ? <LockOpenFill width={16} /> : <TbLockBitcoin width={16} />}
+                                isIconOnly
                                 onPress={() => handleBlockToggle(user.email, user.isBlocked)}
+                                className={
+                                    user.isBlocked
+                                        ? "bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 dark:text-emerald-400 dark:hover:bg-emerald-500/20"
+                                        : "bg-red-500/10 text-red-600 hover:bg-red-500/20 dark:text-red-400 dark:hover:bg-red-500/20"
+                                }
                             >
-                                {user.isBlocked ? "Unblock" : "Block"}
+                                {user.isBlocked ? <LockOpenFill width={16} /> : <TbLockBitcoin width={16} />}
                             </Button>
-                        </CardFooter>
-                    </Card>
+                        </div>
+                    </div>
                 ))}
+
+                {users.length === 0 && (
+                    <p className="text-center text-sm text-gray-500 dark:text-gray-400 py-10">
+                        No users found.
+                    </p>
+                )}
             </div>
         </div>
     );

@@ -21,21 +21,41 @@ const AdminOverviewPage = () => {
     totalRevenue: 0,
   });
 
-  useEffect(() => {
-    if (!userEmail) return;
+ useEffect(() => {
+    if (isPending || !userEmail) return;
+
+    let ignore = false;
 
     const fetchOverview = async () => {
-      const { data } = await authClient.token();
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/overview`, {
-        headers: { Authorization: `Bearer ${data?.token}` },
-      });
-      const result = await res.json();
-      setStats(result);
+      try {
+        const { data } = await authClient.token();
+        if (!data?.token) {
+          console.warn("Token not ready yet, skipping fetch");
+          return;
+        }
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/overview`, {
+          headers: { Authorization: `Bearer ${data.token}` },
+          cache: "no-store",
+        });
+
+        if (!res.ok) {
+          throw new Error(`Overview fetch failed: ${res.status}`);
+        }
+
+        const result = await res.json();
+        if (!ignore) setStats(result);
+      } catch (err) {
+        console.error("Overview fetch error:", err);
+      }
     };
 
-    fetchOverview().catch(err => console.log(err));
+    fetchOverview();
 
-  }, [userEmail]);
+    return () => {
+      ignore = true;
+    };
+}, [userEmail, isPending]);
 
   if (isPending) {
     return (
