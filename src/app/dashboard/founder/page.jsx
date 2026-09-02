@@ -65,9 +65,10 @@ const FounderOverviewPage = () => {
 
   return (
     <div className="p-6 space-y-10">
-      <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
-        Founder Dashboard Overview
-      </h1>
+       <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold tracking-wide rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+                        
+                        Overview
+                      </span>
       <OverviewCard cards={cards} />
       <OverviewChart data={chartData} title="Platform Overview" />
     </div>

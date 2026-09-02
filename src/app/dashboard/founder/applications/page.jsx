@@ -5,15 +5,15 @@ import { HiOutlineBriefcase } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 
 const statusStyle = {
-  Pending: 'bg-amber-500',
-  Accepted: 'bg-emerald-500',
-  Rejected: 'bg-red-500'
+  pending: 'bg-amber-500',
+  accepted: 'bg-emerald-500',
+  rejected: 'bg-red-500'
 };
 
 const statusLabel = {
-  Pending: 'Pending',
-  Accepted: 'Accepted',
-  Rejected: 'Rejected',
+  pending: 'Pending',
+  accepted: 'Accepted',
+  rejected: 'Rejected',
 };
 
 const FounderApplicationsPage = () => {
@@ -24,40 +24,60 @@ const FounderApplicationsPage = () => {
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
 
+  const getAuthHeader = async () => {
+    const { data } = await authClient.token();
+    return { Authorization: `Bearer ${data?.token}` };
+  };
+
   useEffect(() => {
     if (isPending) return;
     if (!userEmail) {
       setLoading(false);
       return;
     }
-    setLoading(true);
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/founder-applications?email=${userEmail}`)
-      .then((res) => res.json())
-      .then((data) => {
+
+    const fetchApplications = async () => {
+      setLoading(true);
+      try {
+        const headers = await getAuthHeader();
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/founder-applications?email=${userEmail}`,
+          { headers }
+        );
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || `Request failed: ${res.status}`);
+        }
+
+        const data = await res.json();
         setApplications(Array.isArray(data) ? data : []);
-        setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error('Failed to fetch applications:', err);
-        toast.error('Failed to load applications');
+        toast.error(err.message || 'Failed to load applications');
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchApplications();
   }, [userEmail, isPending]);
 
   const updateStatus = async (id, status) => {
     setUpdatingId(id);
     try {
+      const headers = await getAuthHeader();
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/${id}/status`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...headers },
         body: JSON.stringify({ status }),
       });
       const data = await res.json();
       if (data.modifiedCount >= 0) {
         setApplications((prev) =>
-          prev.map((a) => (a._id === id ? { ...a, status } : a))
+          prev.map((a) => (a._id === id ? { ...a, status: status.toLowerCase() } : a))
         );
-        toast.success(status === 'Accepted' ? 'Application accepted' : 'Application rejected');
+        toast.success(status === 'accepted' ? 'Application accepted' : 'Application rejected');
       } else {
         toast.error('Could not update status');
       }
@@ -86,58 +106,61 @@ const FounderApplicationsPage = () => {
         </div>
       ) : (
         <div className="grid gap-4">
-          {applications.map((a) => (
-            <div
-              key={a._id}
-              className="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 flex items-center justify-between gap-4 flex-wrap"
-            >
-              <span className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-violet-600 to-blue-600" />
+          {applications.map((a) => {
+            const currentStatus = (a.status || 'pending').toLowerCase();
+            return (
+              <div
+                key={a._id}
+                className="relative overflow-hidden rounded-2xl border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 flex items-center justify-between gap-4 flex-wrap"
+              >
+                <span className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-violet-600 to-blue-600" />
 
-              <div className="pl-3 flex-1 min-w-[200px]">
-                <p className="font-medium text-gray-900 dark:text-white">{a.role_title}</p>
-                <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">{a.applicant_email}</p>
-                {a.portfolio_link && (
-                  <a
-                    href={a.portfolio_link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-violet-600 dark:text-violet-400 hover:underline mt-1 inline-block"
-                  >
-                    View portfolio
-                  </a>
+                <div className="pl-3 flex-1 min-w-[200px]">
+                  <p className="font-medium text-gray-900 dark:text-white">{a.role_title}</p>
+                  <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">{a.applicant_email}</p>
+                  {a.portfolio_link && (
+                   <a 
+                      href={a.portfolio_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs text-violet-600 dark:text-violet-400 hover:underline mt-1 inline-block"
+                    >
+                      View portfolio
+                    </a>
+                  )}
+                </div>
+
+                <p className="text-sm text-gray-600 dark:text-slate-300 max-w-xs line-clamp-2">
+                  {a.motivation_message}
+                </p>
+
+                <span
+                  className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full text-white ${statusStyle[currentStatus]}`}
+                >
+                  {statusLabel[currentStatus]}
+                </span>
+
+                {currentStatus === 'pending' && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      disabled={updatingId === a._id}
+                      onClick={() => updateStatus(a._id, 'accepted')}
+                      className="px-4 py-2 rounded-lg border border-emerald-300 dark:border-emerald-700 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950 transition disabled:opacity-50"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      disabled={updatingId === a._id}
+                      onClick={() => updateStatus(a._id, 'rejected')}
+                      className="px-4 py-2 rounded-lg border border-red-300 dark:border-red-700 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950 transition disabled:opacity-50"
+                    >
+                      Reject
+                    </button>
+                  </div>
                 )}
               </div>
-
-              <p className="text-sm text-gray-600 dark:text-slate-300 max-w-xs line-clamp-2">
-                {a.motivation_message}
-              </p>
-
-              <span
-                className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full text-white ${statusStyle[a.status || 'Pending']}`}
-              >
-                {statusLabel[a.status || 'Pending']}
-              </span>
-
-              {(a.status || 'Pending') === 'Pending' && (
-                <div className="flex items-center gap-2">
-                  <button
-                    disabled={updatingId === a._id}
-                    onClick={() => updateStatus(a._id, 'Accepted')}
-                    className="px-4 py-2 rounded-lg border border-emerald-300 dark:border-emerald-700 text-sm font-medium text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950 transition disabled:opacity-50"
-                  >
-                    Approve
-                  </button>
-                  <button
-                    disabled={updatingId === a._id}
-                    onClick={() => updateStatus(a._id, 'Rejected')}
-                    className="px-4 py-2 rounded-lg border border-red-300 dark:border-red-700 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950 transition disabled:opacity-50"
-                  >
-                    Reject
-                  </button>
-                </div>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

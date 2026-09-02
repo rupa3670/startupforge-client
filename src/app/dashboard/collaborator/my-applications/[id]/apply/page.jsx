@@ -179,7 +179,7 @@ const ApplyPage = () => {
             <div className="max-w-2xl mx-auto">
                 <Button
                     onClick={() => router.back()}
-                    className="mb-6 inline-flex items-center gap-1.5 text-sm text-white dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                    className="mb-6 inline-flex items-center gap-1.5 text-sm text-white dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                 >
                     <FiArrowLeft className="w-3.5 h-3.5" />
                     Back

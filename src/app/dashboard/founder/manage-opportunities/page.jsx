@@ -129,13 +129,11 @@ const ManageOpportunities = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 p-6 transition-colors">
       {/* Header */}
-      <div className="mb-6 flex justify-center">
-        <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold text-blue-700 bg-blue-100">
-  Manage opportunities
-</span>
-      </div>
+       <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold tracking-wide rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+                          Manage-Opportunities
+                      </span>
 
-      {/* Content */}
+      
       {loading ? (
         <p className="text-sm text-gray-400 dark:text-slate-500 py-10 text-center">Loading...</p>
       ) : opportunities.length === 0 ? (
