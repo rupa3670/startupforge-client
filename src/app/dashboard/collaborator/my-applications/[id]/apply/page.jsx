@@ -179,13 +179,13 @@ const ApplyPage = () => {
             <div className="max-w-2xl mx-auto">
                 <Button
                     onClick={() => router.back()}
-                    className="mb-6 inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                    className="mb-6 inline-flex items-center gap-1.5 text-sm text-white dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                 >
                     <FiArrowLeft className="w-3.5 h-3.5" />
                     Back
                 </Button>
 
-                {/* Opportunity summary card */}
+              
                 <div className="mb-6 rounded-2xl border border-indigo-200/50 dark:border-indigo-500/20 bg-white/70 dark:bg-white/[0.03] backdrop-blur-xl p-5 sm:p-6 flex items-center gap-4">
                     <div className="shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-bold flex items-center justify-center text-lg">
                         {opportunity?.startup_name?.[0]?.toUpperCase() || '?'}

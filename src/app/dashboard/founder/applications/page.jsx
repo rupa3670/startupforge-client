@@ -1,6 +1,7 @@
 'use client'
 import { authClient } from '@/lib/auth-client';
 import React, { useEffect, useState } from 'react';
+import { HiOutlineBriefcase } from 'react-icons/hi';
 import { toast } from 'react-toastify';
 
 const statusStyle = {
@@ -70,14 +71,12 @@ const FounderApplicationsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-slate-950 p-6 transition-colors">
-      <div className="mb-6">
-        <p className="text-xs font-medium text-violet-600 dark:text-violet-400 mb-1">
-          Founder dashboard
-        </p>
-        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
-          Applications
-        </h1>
-      </div>
+      <div className="flex justify-center mb-8">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold tracking-wide rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+                  <HiOutlineBriefcase size={14} />
+                  Application
+                </span>
+              </div>
 
       {loading ? (
         <p className="text-sm text-gray-400 dark:text-slate-500 py-10 text-center">Loading...</p>
